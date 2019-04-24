@@ -83,18 +83,18 @@ public class RsaAsy {
             KeyPair keyPair = RsaAsy.getKeyPair();
             String publicKeyStr = RsaAsy.getPublicKey(keyPair);
             String privateKeyStr = RsaAsy.getPrivateKey(keyPair);
-            System.out.println("RSA公钥Base64编码:" +" "+publicKeyStr);
-            System.out.println("RSA私钥Base64编码：" +" "+privateKeyStr);
-            String mingwen = "12345";
-            PublicKey publicKey=RsaAsy.string2PublicKey(publicKeyStr);
-            byte[] publicEncript=RsaAsy.publicEncrypt(mingwen.getBytes(),publicKey);
-            String byte2Base64=RsaAsy.byte2Base64(publicEncript);
-            System.out.println("公钥加密并base64编码的结果"+" "+byte2Base64);
+            System.out.println("RSA公钥Base64编码:" + " " + publicKeyStr);
+            System.out.println("RSA私钥Base64编码：" + " " + privateKeyStr);
+            String mingwen = "rsa测试";
+            PublicKey publicKey = RsaAsy.string2PublicKey(publicKeyStr);
+            byte[] publicEncript = RsaAsy.publicEncrypt(mingwen.getBytes(), publicKey);
+            String byte2Base64 = RsaAsy.byte2Base64(publicEncript);
+            System.out.println("公钥加密并base64编码的结果" + " " + byte2Base64);
             //----------------------------------------------------------------------
-            PrivateKey privateKey=RsaAsy.string2PrivateKey(privateKeyStr);
-            byte[] base642Byte=RsaAsy.base642Byte(byte2Base64);
-            byte[] privateDecrypt=RsaAsy.privateDecrypt(base642Byte,privateKey);
-            System.out.println("解密后的明文"+" "+new String(privateDecrypt));
+            PrivateKey privateKey = RsaAsy.string2PrivateKey(privateKeyStr);
+            byte[] base642Byte = RsaAsy.base642Byte(byte2Base64);
+            byte[] privateDecrypt = RsaAsy.privateDecrypt(base642Byte, privateKey);
+            System.out.println("解密后的明文" + " " + new String(privateDecrypt));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,5 +1,6 @@
 package com.general.tools.cryptor;
 
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -10,52 +11,87 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 /**
  * AES对称加密:参考https://www.cnblogs.com/lianghui66/archive/2013/03/07/2948494.html
+ * 本类仅实现了128位密钥、iv的加解密算法
  **/
 public class AesSym {
     //定义密钥
     private static String key = "fuxinshigehaoren";
     //定义初始化向量参数
     private static String iv = "aabbccddeeffgghh";
-
     /**
      * 字符串AES加密
      **/
-    public static String encrypt(String mingwen) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    public static String encrypt(String mingwen, String codekey, String key, String codeiv, String iv, String work, String full, String code) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+        byte[] a, b;
+        if (codekey.equals("Base64")) {
+            a = Base64.getDecoder().decode(key);
+        } else {
+            a = key.getBytes();
+        }
         //获取密钥
-        Key keySpec = new SecretKeySpec(key.getBytes(), "AES");
+        Key keySpec = new SecretKeySpec(a, "AES");
+        if (codeiv.equals("Base64")) {
+            b = Base64.getDecoder().decode(iv);
+        }
+        else {
+            b = iv.getBytes();
+        }
         //获取初始化向量参数
-        IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes());
+        IvParameterSpec ivSpec = new IvParameterSpec(b);
         //建cipher实例
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        Cipher cipher = Cipher.getInstance("AES/" + work + "/" + full);
         //初始化实例
         cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
         //加密
-        byte[] b = cipher.doFinal(mingwen.getBytes());
-        //这里用二进制、十六进制转换
-        String miwen=parseByte2HexStr(b);
-        //输出密文字符串形式，这里用base64强制转字符串会出错。
+        byte[] result = cipher.doFinal(mingwen.getBytes());
+        System.out.println(result.length);  //这里字节为16的原因在于就是16，然后用16进制表示为32位，没错
+        String miwen = null;
+        if (code.equals("Base64")) {
+            //输出密文字符串形式
+            miwen = Base64.getEncoder().encodeToString(result);
+        } else if (code.equals("HEX")) {
+            //这里用二进制、十六进制转换
+            miwen = parseByte2HexStr(result);
+        }
         return miwen;
     }
-
     /**
-     * 字符串AES解密
+     * 字符串AES解密,code表示加密后对字符数组使用的编码格式
      **/
-    public static String decrypt(String miwen) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        byte[] bytes=parseHexStr2Byte(miwen);
-        IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes());
-        Key keySpec = new SecretKeySpec(key.getBytes(), "AES");
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+    public static String decrypt(String miwen, String codekey, String key, String codeiv, String iv, String work, String full, String code) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+        byte[] bytes;
+        if (code.equals("Base64")) {
+            bytes = Base64.getDecoder().decode(miwen);
+        } else {
+            bytes = parseHexStr2Byte(miwen);
+        }
+        byte[] a, b;
+        if (codekey.equals("Base64")) {
+            a = Base64.getDecoder().decode(key);
+        } else {
+            a = key.getBytes();
+        }
+        if (codeiv.equals("Base64")) {
+            b = Base64.getDecoder().decode(iv);
+        }
+        else {
+            b = iv.getBytes();
+        }
+        Key keySpec = new SecretKeySpec(a, "AES");
+        IvParameterSpec ivSpec = new IvParameterSpec(b);
+        Cipher cipher = Cipher.getInstance("AES/" + work + "/" + full);
         cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
         byte[] result = cipher.doFinal(bytes);
         return new String(result);
     }
 
     public static void main(String[] args) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
-        System.out.println(encrypt("fuxin"));
-        System.out.println(decrypt("0C19F90FFDAED67E2629468AA9DD8529"));
+        System.out.println(encrypt("fuxin", "String", key, "String", iv, "CBC", "PKCS5Padding", "Base64"));
+        System.out.println(decrypt("0C19F90FFDAED67E2629468AA9DD8529", "String", key, "String", iv, "CBC", "PKCS5Padding", "HEX"));
     }
     //----------------------------------------------------------------------------------
 

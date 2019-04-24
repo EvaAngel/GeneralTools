@@ -1,12 +1,12 @@
 package com.general.tools.gui;
 
 import com.general.tools.gui.computer_principle_gui.BiBinaryGui;
-import com.general.tools.gui.computer_principle_gui.BiStringGui;
 import com.general.tools.gui.codinggui.AsciiGui;
 import com.general.tools.gui.codinggui.GB_2312Gui;
 import com.general.tools.gui.codinggui.UnicodeGui;
 import com.general.tools.gui.codinggui.Utf_8Gui;
 import com.general.tools.gui.computer_principle_gui.OriginalCodeGui;
+import com.general.tools.gui.cryptorgui.AesDesGUI;
 import com.general.tools.gui.cryptorgui.Md5ShaGUI;
 
 import javax.swing.*;
@@ -67,15 +67,13 @@ public class TotalGui {
         Md5ShaGUI md5ShaGUI=new Md5ShaGUI();
         jTabbedPane2.addTab("hash加解密", md5ShaGUI);
         jTabbedPane2.setMnemonicAt(0, KeyEvent.VK_1);
-        UnicodeGui unicodeGui2=new UnicodeGui();
-        jTabbedPane2.addTab("AES对称加解密", unicodeGui2);
+        AesDesGUI aesGUI=new AesDesGUI();
+        jTabbedPane2.addTab("AES、DES对称加解密", aesGUI);
         jTabbedPane2.setMnemonicAt(0, KeyEvent.VK_2);
         Utf_8Gui utf_8Gui2=new Utf_8Gui();
-        jTabbedPane2.addTab("DES非对称加解密", utf_8Gui2);
+        jTabbedPane2.addTab("RSA、DSA非对称加解密", utf_8Gui2);
         jTabbedPane2.setMnemonicAt(0, KeyEvent.VK_3);
         //GB_2312Gui gb_2312Gui2=new GB_2312Gui();
-        jTabbedPane2.addTab("RSA非对称加解密", gb_2312Gui2);
-        jTabbedPane2.setMnemonicAt(0, KeyEvent.VK_4);
         jPanel2.add(jTabbedPane2);
         //
         JPanel jPanel3 = new JPanel();
